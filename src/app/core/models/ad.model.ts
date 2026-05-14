@@ -83,7 +83,7 @@ export interface CreateAdDto {
   warrantyType?: string;
   warrantyTime?: string;
   /** Atributos obrigatórios da categoria preenchidos pelo usuário */
-  attributes?: { id: string; value_name: string }[];
+  attributes?: { id: string; value_name: string; unit_id?: string }[];
   pictureUrls?: string[];
 }
 

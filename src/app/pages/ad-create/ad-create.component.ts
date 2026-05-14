@@ -182,7 +182,19 @@ export class AdCreateComponent implements OnInit {
   submit(): void {
     if (!this.isValid()) return;
     this.saving.set(true);
-    const attributes = Object.entries(this.attributeValues()).filter(([, v]) => v.trim().length > 0).map(([id, value_name]) => ({ id, value_name }));
+    const allAttrs = this.categoryAttributes();
+    const attributes = Object.entries(this.attributeValues())
+      .filter(([, v]) => v.trim().length > 0)
+      .map(([id, value_name]) => {
+        const attrDef = allAttrs.find((a) => a.id === id);
+        if (attrDef?.value_type === 'number_unit') {
+          const parts = value_name.trim().split(/\s+/);
+          if (parts.length === 2) {
+            return { id, value_name: parts[0], unit_id: parts[1] };
+          }
+        }
+        return { id, value_name };
+      });
     const dto: CreateAdDto = { ...this.form, attributes, pictureUrls: this.validPictures() };
     this.adsService.create(dto).subscribe({
       next: (ad) => { this.snackBar.open('Anuncio publicado com sucesso!', 'OK', { duration: 4000 }); this.router.navigate(['/ads', ad._id]); },
