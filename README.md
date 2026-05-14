@@ -1,63 +1,74 @@
-# ML Hub â€” Frontend
+﻿# 🖥️ ML Hub — Frontend
 
-> Interface web do desafio tecnico: gerenciamento de anuncios do Mercado Livre.
-
-## Stack
-
-- **Angular 18** (standalone components, signals)
-- **Angular Material** - componentes UI
-- **TailwindCSS** - utilitarios de layout e espacamento
-- **TypeScript** - tipagem estatica
+> Dashboard para vendedores gerenciarem seus anúncios no Mercado Livre com análise de concorrentes em tempo real.
 
 ---
 
-## Arquitetura
+## ✨ Sobre o projeto
+
+O **ML Hub Frontend** é uma SPA Angular que conecta vendedores à plataforma ML Hub:
+
+- 🔐 Login com OAuth do Mercado Livre (sem senha, sem cadastro)
+- 📊 Dashboard com KPIs em tempo real (anúncios ativos, receita, estoque)
+- 📦 Criar e editar anúncios com formulário dinâmico por categoria
+- ��️ Atributos obrigatórios detectados automaticamente via API do ML
+- 🔍 Análise de concorrentes por produto
+- 🔄 Sincronização manual e automática com o ML
+
+---
+
+## 🚀 Tecnologias
+
+| Tecnologia | Uso |
+|---|---|
+| **Angular 19** | Framework SPA (standalone components) |
+| **Angular Signals** | Reatividade moderna sem RxJS verboso |
+| **Angular Material** | Componentes UI (tabelas, formulários, dialogs) |
+| **Tailwind CSS** | Estilização utilitária |
+| **TypeScript** | Tipagem estática |
+
+---
+
+## 📁 Estrutura do Projeto
 
 ```
 src/app/
-â”œâ”€â”€ core/
-â”‚   â”œâ”€â”€ guards/       # authGuard (canActivate)
-â”‚   â”œâ”€â”€ interceptors/ # authInterceptor (Authorization header)
-â”‚   â”œâ”€â”€ models/       # Interfaces TypeScript (Ad, CreateAdDto)
-â”‚   â””â”€â”€ services/     # AuthService, AdsService
-â”œâ”€â”€ layout/
-â”‚   â””â”€â”€ shell/        # Layout principal com sidebar
-â””â”€â”€ pages/
-    â”œâ”€â”€ login/            # Botao OAuth ML
-    â”œâ”€â”€ auth-callback/    # Captura token JWT da URL
-    â”œâ”€â”€ dashboard/        # Metricas gerais
-    â”œâ”€â”€ ads-list/         # Listagem com filtros e paginacao
-    â”œâ”€â”€ ad-create/        # Formulario criacao de anuncio
-    â””â”€â”€ ad-detail/        # Edicao de anuncio existente
+├── core/
+│   ├── guards/        # AuthGuard — protege rotas privadas
+│   ├── interceptors/  # AuthInterceptor — injeta JWT em toda requisição
+│   ├── models/        # Interfaces TypeScript (Ad, Seller, etc.)
+│   └── services/      # AdsService, AuthService
+├── layout/
+│   └── shell/         # Layout principal (navbar + router-outlet)
+└── pages/
+    ├── login/          # Tela de login com OAuth
+    ├── auth-callback/  # Processa token vindo do backend
+    ├── dashboard/      # KPIs e visão geral
+    ├── ads-list/       # Listagem de anúncios com filtros
+    ├── ad-create/      # Formulário de criação de anúncio
+    └── ad-detail/      # Detalhe + análise de concorrentes
 ```
 
 ---
 
-## Setup local
+## ⚙️ Configuração
+
+### Pré-requisitos
+
+- Node.js 22+
+- Backend ML Hub rodando (local ou Render)
+
+### 1. Clone e instale
 
 ```bash
-# 1. Instalar dependencias
+git clone https://github.com/seu-usuario/ml-hub.git
+cd ml-hub-front
 npm install
-
-# 2. Iniciar servidor de desenvolvimento
-ng serve
-
-# Acesse: http://localhost:4200
 ```
 
-### Scripts
+### 2. Configure o environment
 
-| Script | Descricao |
-|--------|-----------|
-| `ng serve` | Servidor de desenvolvimento |
-| `ng build` | Build de producao em ./dist |
-| `ng build --configuration production` | Build otimizado |
-
----
-
-## Configuracao de ambiente
-
-O arquivo `src/environments/environment.ts` aponta para o backend:
+Edite `src/environments/environment.ts` para desenvolvimento local:
 
 ```typescript
 export const environment = {
@@ -66,49 +77,66 @@ export const environment = {
 };
 ```
 
-Para producao, edite `environment.production.ts`:
+Para produção, `src/environments/environment.prod.ts` já está configurado:
 
 ```typescript
 export const environment = {
   production: true,
-  apiUrl: 'https://seu-backend.onrender.com'
+  apiUrl: 'https://ml-hub-e53i.onrender.com'
 };
 ```
 
----
+### 3. Rode em desenvolvimento
 
-## Funcionalidades
-
-| Pagina | Funcionalidades |
-|--------|-----------------|
-| Login | Autenticacao OAuth com Mercado Livre |
-| Dashboard | Resumo de anuncios (total, ativos, pausados) |
-| Anuncios | Listagem, busca por titulo, filtro por status, paginacao |
-| Novo Anuncio | Formulario com campos obrigatorios do ML (categoria, condicao, imagens) |
-| Detalhe | Editar titulo/descricao, atualizar preco/estoque, pausar/reativar |
-
----
-
-## Fluxo de autenticacao
-
-```
-1. Usuario acessa "/" â†’ authGuard redireciona para "/login"
-2. Clica "Entrar com Mercado Livre" â†’ GET /auth/mercadolivre
-3. ML redireciona para /auth/callback?token=JWT
-4. AuthCallbackComponent salva token no localStorage
-5. Redireciona para "/dashboard"
-6. authInterceptor injeta "Authorization: Bearer <token>" em todas as requests
+```bash
+npm start
 ```
 
+A aplicação estará disponível em `http://localhost:4200`.
+
 ---
 
-## Deploy (Vercel)
+## 📜 Scripts
 
-1. Fazer push do repositorio para GitHub
-2. Criar projeto em [vercel.com](https://vercel.com)
-3. Configurar:
+| Script | Descrição |
+|---|---|
+| `npm start` | Servidor de desenvolvimento (`ng serve`) |
+| `npm run build` | Build de produção com troca de environments |
+| `npm run watch` | Build em modo watch |
+| `npm test` | Testes unitários com Karma |
+
+---
+
+## 🔐 Fluxo de Autenticação
+
+```
+Usuário clica "Entrar com Mercado Livre"
+  → Frontend chama GET /auth/mercadolivre (backend)
+  → Backend redireciona para auth.mercadolivre.com.br
+  → Usuário autoriza o app no ML
+  → ML redireciona para o backend (callback)
+  → Backend gera JWT e redireciona para /auth/callback?token=JWT
+  → AuthCallbackComponent salva token no localStorage
+  → Usuário é redirecionado para o dashboard
+```
+
+O `AuthInterceptor` injeta automaticamente o token em todas as requisições ao backend.
+
+---
+
+## �� Deploy na Vercel
+
+1. Acesse [vercel.com](https://vercel.com) e importe o repositório
+2. Configure:
    - **Framework Preset:** Angular
-   - **Build Command:** `ng build --configuration production`
+   - **Build Command:** `npm run build`
    - **Output Directory:** `dist/ml-hub-front/browser`
-4. Adicionar variavel de ambiente `API_URL` se necessario
-5. Atualizar `FRONTEND_URL` no backend com URL do Vercel
+3. Deploy automático a cada push na branch `main`
+
+> O arquivo `angular.json` já possui `fileReplacements` configurados para trocar `environment.ts` por `environment.prod.ts` no build de produção.
+
+---
+
+## 📄 Licença
+
+MIT
