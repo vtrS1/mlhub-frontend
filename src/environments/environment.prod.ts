@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://SEU_DOMINIO',
+  apiUrl: 'https://ml-hub-e53i.onrender.com',
 };
