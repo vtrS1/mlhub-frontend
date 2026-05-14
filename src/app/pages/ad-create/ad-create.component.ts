@@ -182,18 +182,28 @@ export class AdCreateComponent implements OnInit {
   submit(): void {
     if (!this.isValid()) return;
     this.saving.set(true);
+
+    // Usa os atributos carregados da categoria como fonte de verdade
+    // Garante que só atributos visíveis/válidos sejam enviados, com formatação correta
     const allAttrs = this.categoryAttributes();
+    const attrMap = new Map(allAttrs.map((a) => [a.id, a]));
+
     const attributes = Object.entries(this.attributeValues())
-      .filter(([, v]) => v.trim().length > 0)
+      .filter(([id, v]) => {
+        if (!v || v.trim() === '' || v === 'null') return false;
+        const def = attrMap.get(id);
+        if (!def) return false; // só envia o que está na lista de atributos visíveis
+        return true;
+      })
       .map(([id, value_name]) => {
-        const attrDef = allAttrs.find((a) => a.id === id);
-        if (attrDef?.value_type === 'number_unit') {
+        const def = attrMap.get(id)!;
+        if (def.value_type === 'number_unit') {
           const parts = value_name.trim().split(/\s+/);
           if (parts.length === 2) {
             return { id, value_name: parts[0], unit_id: parts[1] };
           }
         }
-        return { id, value_name };
+        return { id, value_name: value_name.trim() };
       });
     const dto: CreateAdDto = { ...this.form, attributes, pictureUrls: this.validPictures() };
     this.adsService.create(dto).subscribe({
