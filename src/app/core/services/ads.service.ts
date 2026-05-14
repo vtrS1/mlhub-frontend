@@ -11,6 +11,7 @@ import {
   UpdateStockDto,
   MLCategoryDetails,
   MLCategoryAttribute,
+  CompetitorAnalysis,
 } from '../models/ad.model';
 
 @Injectable({ providedIn: 'root' })
@@ -60,6 +61,10 @@ export class AdsService {
 
   sync(): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(`${this.baseUrl}/sync`, {});
+  }
+
+  getCompetitors(id: string): Observable<CompetitorAnalysis> {
+    return this.http.get<CompetitorAnalysis>(`${this.baseUrl}/${id}/competitors`);
   }
 
   getCategories(): Observable<{ id: string; name: string }[]> {

@@ -88,3 +88,26 @@ export interface UpdatePriceDto {
 export interface UpdateStockDto {
   availableQuantity: number;
 }
+
+export interface CompetitorItem {
+  id: string;
+  title: string;
+  price: number;
+  thumbnail: string;
+  permalink: string;
+  seller_id: number;
+}
+
+export interface CompetitorAnalysis {
+  adId: string;
+  mlItemId: string;
+  title: string;
+  myPrice: number;
+  competitors: CompetitorItem[];
+  stats: {
+    minPrice: number | null;
+    maxPrice: number | null;
+    avgPrice: number | null;
+    count: number;
+  };
+}
