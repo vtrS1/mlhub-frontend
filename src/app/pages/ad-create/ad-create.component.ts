@@ -110,8 +110,18 @@ export class AdCreateComponent implements OnInit {
     this.loadingAttributes.set(true);
     this.adsService.getCategoryAttributes(categoryId).subscribe({
       next: (attrs) => {
-        const SKIP_IDS = ['GTIN', 'EAN', 'UPC', 'ISBN', 'MPN', 'SELLER_SKU'];
-        this.categoryAttributes.set(attrs.filter((a) => !SKIP_IDS.includes(a.id) && !a.tags.hidden && !a.tags.read_only));
+        // Ocultar apenas atributos gerados automaticamente ou somente leitura
+        // GTIN deve aparecer pois é obrigatório em algumas categorias (ex: eletrônicos)
+        // business_conditional: o ML gerencia automaticamente, enviar causa erro
+        const ALWAYS_SKIP = ['SELLER_SKU', 'MPN', 'EAN', 'UPC', 'ISBN'];
+        this.categoryAttributes.set(
+          attrs.filter((a) =>
+            !ALWAYS_SKIP.includes(a.id) &&
+            !a.tags.hidden &&
+            !a.tags.read_only &&
+            !(a.tags as Record<string, unknown>)['business_conditional']
+          )
+        );
         this.loadingAttributes.set(false);
       },
       error: () => this.loadingAttributes.set(false),
