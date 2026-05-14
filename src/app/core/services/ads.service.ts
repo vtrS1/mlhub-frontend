@@ -71,6 +71,8 @@ export class AdsService {
   }
 
   getCategoryAttributes(categoryId: string): Observable<MLCategoryAttribute[]> {
-    return this.http.get<MLCategoryAttribute[]>(`${this.baseUrl}/categories/${categoryId}/attributes`);
+    return this.http.get<MLCategoryAttribute[]>(
+      `${this.baseUrl}/categories/${categoryId}/attributes`,
+    );
   }
 }
