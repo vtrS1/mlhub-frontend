@@ -218,7 +218,7 @@ import { Ad, AdsFilter } from '../../core/models/ad.model';
                 *matHeaderCellDef
                 class="!bg-gray-50 !border-b !border-gray-200 !text-xs !font-semibold !text-gray-500 !uppercase !tracking-wide"
               >
-                Sync
+                Sincronização
               </th>
               <td mat-cell *matCellDef="let ad" class="!py-3">
                 <span
@@ -226,7 +226,7 @@ import { Ad, AdsFilter } from '../../core/models/ad.model';
                   [class]="syncClass(ad.syncStatus)"
                 >
                   <mat-icon class="!text-xs !w-3 !h-3">{{ syncIcon(ad.syncStatus) }}</mat-icon>
-                  {{ ad.syncStatus }}
+                  {{ syncLabel(ad.syncStatus) }}
                 </span>
               </td>
             </ng-container>
@@ -398,5 +398,15 @@ export class AdsListComponent implements OnInit {
       CONFLICT: 'warning',
     };
     return map[status] ?? 'help';
+  }
+
+  syncLabel(status: string): string {
+    const map: Record<string, string> = {
+      SYNCED: 'Sincronizado',
+      PENDING: 'Pendente',
+      ERROR: 'Erro',
+      CONFLICT: 'Conflito',
+    };
+    return map[status] ?? status;
   }
 }
