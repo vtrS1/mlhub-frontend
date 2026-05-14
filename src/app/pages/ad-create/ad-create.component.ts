@@ -59,7 +59,7 @@ export class AdCreateComponent implements OnInit {
     return !!d && d.children_categories.length === 0;
   });
   requiredAttributes = computed(() =>
-    this.categoryAttributes().filter((a) => a.tags.required || a.tags.catalog_required));
+    this.categoryAttributes().filter((a) => a.tags.required || a.tags.catalog_required || a.tags.conditional_required));
   optionalAttributes = computed(() =>
     this.categoryAttributes().filter((a) => !a.tags.required && !a.tags.catalog_required));
   filledRequiredCount = computed(() =>
